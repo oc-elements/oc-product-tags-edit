@@ -1,0 +1,32 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>oc-product-tags-edit test</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../oc-product-tags-edit.html">
+  </head>
+  <body>
+
+    <test-fixture id="basic">
+      <template>
+        <oc-product-tags-edit></oc-product-tags-edit>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('oc-product-tags-edit', function() {
+
+        test('instantiating the element works', function() {
+          var element = fixture('basic');
+          assert.equal(element.is, 'oc-product-tags-edit');
+        });
+
+      });
+    </script>
+  </body>
+</html>
