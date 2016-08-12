@@ -16,7 +16,31 @@ Element to edit product tags on the Ordercloud platform
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]</h2>
+    <h4>Tags</h4>
+    <div hidden$="[[!productTags.length]]">
+      <paper-tags-input enable-add="false" enable-remove="false" tags="[[productTagsDisplay]]"></paper-tags-input>
+    </div>
+    <div hidden$="[[productTags.length]]">
+      <p>No Tags assigned to product</p>
+    </div>
+
+    <h4>Menu Tags</h4>
+    <div hidden$="[[!menuTags.length]]">
+      <paper-tags-input enable-add="false" enable-remove="false" tags="[[menuTagsDisplay]]"></paper-tags-input>
+    </div>
+    <div hidden$="[[menuTags.length]]">
+      <p>No Tags assigned to product</p>
+    </div>
+
+    <h4>All Product Tags</h4>
+    <div hidden$="[[!allProductTags.length]]">
+      <paper-tags-input size="small" on-tap="_addProductTag" enable-add="false" enable-remove="false" tags="[[allProductTagsDisplay]]"></paper-tags-input>
+    </div>
+    <div hidden$="[[allProductTags.length]]">
+      <p>No Tags assigned to product</p>
+    </div>
+
+    <paper-button raised on-tap="_updateTags">Update Tags</paper-button>
   </template>
 
   <script>
@@ -25,11 +49,108 @@ Element to edit product tags on the Ordercloud platform
       is: 'oc-product-tags-edit',
 
       properties: {
-        prop1: {
-          type: String,
-          value: 'oc-product-tags-edit',
+        productTags : {
+          type: Array,
+          value: function(){
+            return [];
+          }
         },
+        productTagsDisplay: {
+          type: Array,
+          value: function(){
+            return [];
+          }
+        },
+
+        allProductTags : {
+          type: Array,
+          value: function(){
+            return [];
+          }
+        },
+        allProductTagsDisplay: {
+          type: Array,
+          value: function(){
+            return [];
+          }
+        },
+
+        menuTags : {
+          type: Array,
+          value: function(){
+            return [];
+          }
+        },
+        menuTagsDisplay: {
+          type: Array,
+          value: function(){
+            return [];
+          }
+        },
+
       },
+
+      observers: [
+        "_computeAllProductsDisplay(allProductTags)",
+        "_computeProductsDisplay(productTags)",
+        "_computeMenuDisplay(menuTags)"
+      ],
+
+      _updateTags : function(e){
+
+        this.fire("product-tags-updated", this.productTags)
+      },
+
+      _computeAllProductsDisplay : function(allProductTags){
+        var tempArr = [];
+
+        for(var i=0; i<allProductTags.length; i++) {
+          tempArr.push(allProductTags[i].name);
+          this.push('allProductTagsDisplay', allProductTags[i].name);
+        }
+      },
+
+      _computeProductsDisplay : function(productTags){
+        var tempArr = [];
+        console.log('fired')
+        for(var i=0; i<productTags.length; i++) {
+          tempArr.push(productTags[i].name);
+          this.push('productTagsDisplay', productTags[i].name);
+        }
+      },
+
+      _computeMenuDisplay : function(menuTags){
+        var tempArr = [];
+
+        for(var i=0; i<menuTags.length; i++) {
+          tempArr.push(menuTags[i].name);
+          this.push('menuTagsDisplay', allProductTags[i].name);
+        }
+      },
+
+      _addProductTag : function(e){
+        var tagName = Polymer.dom(e).rootTarget.innerHTML;
+        var tagObj = {};
+        var tagNotUnique = false;
+
+        for(var i=0; i<this.allProductTags.length; i++) {
+          if(this.allProductTags[i].name == tagName) {
+            tagObj = this.allProductTags[i];
+          }
+        }
+
+        for(var i=0; i<this.productTags.length; i++){
+          if(this.productTags[i].name == tagObj.name){
+            tagNotUnique = true;
+          }
+        }
+
+        if(!tagNotUnique){
+          this.push('productTags', tagObj);
+          this.push('productTagsDisplay', tagObj.name);
+        }
+
+      }
 
     });
   </script>
